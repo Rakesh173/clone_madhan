@@ -1,15 +1,15 @@
 import React,{useState} from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Linking,ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Linking,ScrollView,Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-// import { ScrollView } from 'react-native-gesture-handler';
+import axios from 'axios';
 
 const CryptoSetup = ({route}) => {
   const {businessName,email,mobileNumber,password,govtid,idnumber}=route.params;
 
   const navigation = useNavigation();
-  const handleEntry = () => {
-      navigation.navigate("ENTRY",{businessName,email,mobileNumber,password,govtid,idnumber,walletAddress});
+  const handleLogin = () => {
+      navigation.navigate("LOGIN");
   };
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
@@ -18,9 +18,35 @@ const CryptoSetup = ({route}) => {
     {label: 'Avax', value: 'Avax'},
     {label: 'USDT', value: 'USDT'},
     {label: 'LINK', value: 'LINK'},
-    {label:'TUSD', value:'TUSD'},
-    {label:'BCUT', value:'BCUT'}
+    {label:'USDC', value:'USDC'},
+    {label:'BEAM', value:'BEAM'}
   ]);
+
+  function handleSubmit(){
+    const merchantData={
+      businessName,
+      email,
+      mobileNumber,
+      password,
+      govtid,
+      idnumber,
+      walletAddress,
+    }
+
+    axios.post("http://192.168.30.1:5001/merchantregister",merchantData)
+    .then((res)=>{
+      console.log(res.data);
+      if(res.data.status== 'Ok'){
+        alert('Registered Successfully');
+        handleLogin();
+      }else{
+        alert(JSON.stringify(res.data));
+      }
+    }).catch((e)=>{
+      console.log(e);
+    })
+  }
+
   return (
     <View style={styles.scrollContainer}>
     <View style={styles.container}>
@@ -85,10 +111,10 @@ const CryptoSetup = ({route}) => {
             ) {
               alert('Please fill in all required fields.');
             } else {
-              handleEntry();
+              handleSubmit();
             }
           }}>
-        <Text style={styles.finishButtonText}>Finish Now</Text>
+        <Text style={styles.finishButtonText}>Register Now</Text>
       </TouchableOpacity>
     </View>
     </View>

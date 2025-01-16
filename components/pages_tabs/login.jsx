@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/Ionicons'; // Added for icons
+import Icon from 'react-native-vector-icons/Ionicons';
+import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = () => {
   const navigation = useNavigation();
@@ -12,6 +14,26 @@ const Login = () => {
   const handleEntry = () => {
     navigation.navigate("ENTRY");
   };
+
+  function handleSubmit(){
+    console.log(email,password);
+    const merchantData={
+      email:email,
+      password,
+    }
+    axios.post("http://192.168.30.1:5001/merchantlogin",merchantData)
+    .then((res)=>{
+      console.log(res.data);
+      if(res.data.status=='ok'){
+      alert("Login Successfully");
+      AsyncStorage.setItem('token', res.data.data);
+      AsyncStorage.setItem('isLoggedIn',JSON.stringify(true));
+      handleEntry();
+      }else{
+        alert("Incorrect Email or Password");
+      }
+    });
+  }
 
   const handleSignup=()=>{
     navigation.navigate("SIGNUP");
@@ -69,7 +91,7 @@ const Login = () => {
           if (!email||!password) {
             alert('Please fill in all required fields.');
           } else {
-            handleEntry();
+            handleSubmit();
           }
         }}
       >

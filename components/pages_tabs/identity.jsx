@@ -45,8 +45,8 @@ const BlockPayStep2 = () => {
       <TextInput
         style={styles.input}
         placeholder="Enter your Name as per GOVT ID *"
-        onChangeText={setGovtid}
         value={govtid}
+        onChangeText={setGovtid}
       />
       <TextInput
         style={styles.input}

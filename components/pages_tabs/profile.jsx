@@ -1,6 +1,8 @@
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfilePage = () => {
   const navigation=useNavigation();
@@ -10,6 +12,25 @@ const ProfilePage = () => {
   const handlehomepage = () => {
     navigation.navigate("ENTRY");
   };
+
+  const [merchantData,setMerchantData]=useState('');
+
+  //Getting Merchant Data
+
+  async function getData(){
+    const token=await AsyncStorage.getItem('token');
+    console.log(token);
+    axios.post('http://192.168.30.1:5001/merchantdata',{token:token})
+    .then((res)=>{
+      console.log(res.data);
+      setMerchantData(res.data.data);
+    });
+  }
+
+  useEffect(()=>{
+    getData();
+  },[]);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.topcontainer}>
@@ -24,20 +45,20 @@ const ProfilePage = () => {
           style={styles.profileImage}
         />
         <View style={styles.profileDetails}>
-          <Text style={styles.profileName}>Madhanraj M</Text>
+          <Text style={styles.profileName}>{merchantData.govtid}</Text>
           <Text style={styles.verifiedText}>Verified Merchant</Text>
         </View>
       </View>
       <View style={styles.infoContainer}>
-        <Text style={styles.label}>Business Name</Text>
+        <Text style={styles.label}>{merchantData.businessName}</Text>
         <Text style={styles.infoText}></Text>
       </View>
       <View style={styles.infoContainer}>
-        <Text style={styles.label}>Username</Text>
+        <Text style={styles.label}>{merchantData.walletAddress}</Text>
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.label}>UPI ID</Text>
-        <Text style={styles.infoText}></Text>
+        <Text style={styles.infoText}>{merchantData.idnumber}</Text>
       </View>
         <TouchableOpacity style={styles.payButton} onPress={handleTransfer}>
         <Text style={styles.payButtonText}>Pay Now</Text>

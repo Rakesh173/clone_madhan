@@ -13,15 +13,29 @@ import TransactionScreen from '@/components/pages_tabs/confirmation';
 import CheckBalance from '@/components/pages_tabs/checkbalance';
 import QRCamera from '@/components/pages_tabs/qrscanner';
 import QRCodeGenerator from '@/components/pages_tabs/home_profile';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView, SafeAreaView } from 'react-native';
 import {Link} from 'expo-router';
 
 const Stack = createNativeStackNavigator();
 
 export default function TabOneScreen() {
+
+  // const [isLoggedIn,setIsLoggedIn]=useState(false);
+
+  // async function getData(){
+  //   const data=await AsyncStorage.getItem('isLoggedIn');
+  //   console.log(data);
+  //   setIsLoggedIn(true);
+  // }
+
+  // useEffect(()=>{
+  //   getData();
+  // })
+
   return (
     <SafeAreaView style={styles.container}>
       <Stack.Navigator

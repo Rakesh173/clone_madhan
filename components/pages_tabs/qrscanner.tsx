@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width * 0.7,
     height: Dimensions.get("window").width * 0.7,
     borderWidth: 2,
-    borderColor: "#00FF00",
+    borderColor: "blue",
     borderRadius: 20,
     overflow: "hidden",
     justifyContent: "center",

@@ -1,21 +1,32 @@
-import React from 'react';
-import { View, Text, TextInput, Image, ScrollView, TouchableOpacity, StyleSheet, Linking } from 'react-native';
-import { useNavigation,useRoute } from '@react-navigation/native';
+import React, { useEffect,useFocusEffect } from 'react';
+import { View, Text, TextInput, Image, ScrollView, TouchableOpacity, StyleSheet, Linking, BackHandler,alert,addEventListener } from 'react-native';
+import { useNavigation} from '@react-navigation/native';
 
 const App = () => {
-  const route=useRoute();
-  // const { businessName,
-  //   email,
-  //   mobileNumber,
-  //   password,
-  //   govtid,
-  //   idnumber,
-  //   walletAddress,
-  //   value}=route.params;
   const navigation = useNavigation();
   const handleTransaction = () => {
       navigation.navigate("TRANSACTION");
   };
+
+  const handleBackPress = () => {
+    alert('Exit App', 'Are you sure you want to exit?', [
+      {
+        text: 'Cancel',
+        onPress: () => null,
+        style: 'cancel',
+      },
+      {
+        text: 'Exit',
+        onPress: () => BackHandler.exitApp(),
+      },
+    ]);
+    return true;
+  };
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress',handleBackPress);
+  }, []);
+
   const handleProfile=()=>{
     navigation.navigate("HOMEPROFILE");
   };

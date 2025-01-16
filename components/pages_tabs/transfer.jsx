@@ -6,34 +6,43 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
+  Image,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import axios from "axios";
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
+
 
 const TransferScreen = () => {
-  const navigation=useNavigation();
-  const [selectedCoin, setSelectedCoin] = useState("bitcoin");
+  const navigation = useNavigation();
+  const [selectedCoin, setSelectedCoin] = useState("avalanche");
   const [inrAmount, setInrAmount] = useState("");
   const [cryptoAmount, setCryptoAmount] = useState(0);
   const [cryptoPrices, setCryptoPrices] = useState({});
   const [loading, setLoading] = useState(true);
+  const [isPaying, setIsPaying] = useState(false);
 
-  const handleTransaction=()=>{
-    navigation.navigate("CONFIRMATION");
-  }
+  const handleTransaction = () => {
+    setIsPaying(true);
+    setTimeout(() => {
+      setIsPaying(false);
+      navigation.navigate("CONFIRMATION");
+    }, 1000); // Simulate API call or processing time
+  };
 
   // Fetch live crypto prices
   useEffect(() => {
     const fetchPrices = async () => {
       try {
         const response = await axios.get(
-          "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,binancecoin,dogecoin&vs_currencies=inr"
+          "https://api.coingecko.com/api/v3/simple/price?ids=avalanche,tether,usdcoin,chainlink&vs_currencies=inr"
         );
         setCryptoPrices(response.data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching crypto prices: ", error);
+        Alert.alert("Error", "Unable to fetch crypto prices. Please try again.");
       }
     };
     fetchPrices();
@@ -50,15 +59,22 @@ const TransferScreen = () => {
   }, [inrAmount, selectedCoin, cryptoPrices]);
 
   const coins = [
-    { id: "bitcoin", name: "Bitcoin (BTC)", icon: "bitcoin" },
-    { id: "ethereum", name: "Ethereum (ETH)", icon: "ethereum" },
-    { id: "binancecoin", name: "Binance Coin (BNB)", icon: "binance" },
-    { id: "dogecoin", name: "Dogecoin (DOGE)", icon: "dog" },
+    { id: "avalanche", name: "Avalanche (AVAX)", icon: "avalanche"},
+    { id: "tether", name: "Tether (USDT)", icon: "tether" },
+    { id: "usdcoin", name: "USD Coin (USDC)", icon: "usdcoin"},
+    { id: "chainlink", name: "Chainlink (LINK)", icon: "chainlink"},
   ];
+
+  const handleInputChange = (text) => {
+    if (/^\d*\.?\d*$/.test(text)) {
+      setInrAmount(text);
+    }
+  };
 
   if (loading) {
     return (
       <View style={styles.container}>
+        <ActivityIndicator size="large" color="#6200ee" />
         <Text style={styles.loadingText}>Fetching live crypto prices...</Text>
       </View>
     );
@@ -69,7 +85,7 @@ const TransferScreen = () => {
       {/* Title */}
       <Text style={styles.title}>Transfer Crypto</Text>
 
-      {/* Select a Coin */}
+      {/* Coin Selection */}
       <Text style={styles.subtitle}>Select a Coin</Text>
       <FlatList
         data={coins}
@@ -84,11 +100,7 @@ const TransferScreen = () => {
             ]}
             onPress={() => setSelectedCoin(item.id)}
           >
-            <MaterialCommunityIcons
-              name={item.icon}
-              size={32}
-              color={selectedCoin === item.id ? "#fff" : "#6200ee"}
-            />
+            <Image source={item.icon} style={styles.coinIcon} />
             <Text
               style={[
                 styles.coinText,
@@ -101,31 +113,34 @@ const TransferScreen = () => {
         )}
       />
 
-      {/* Amount Input and Conversion */}
+      {/* Input and Conversion */}
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Enter INR Amount</Text>
         <TextInput
           style={styles.input}
           keyboardType="numeric"
           value={inrAmount}
-          onChangeText={(text) => setInrAmount(text)}
+          onChangeText={handleInputChange}
           placeholder="Enter amount in INR"
         />
         <View style={styles.conversionRow}>
           <Text style={styles.cryptoLabel}>
             {cryptoAmount} {selectedCoin.toUpperCase()}
           </Text>
-          <MaterialCommunityIcons
-            name="swap-horizontal-bold"
-            size={24}
-            color="#6200ee"
-          />
         </View>
       </View>
 
       {/* Pay Now Button */}
-      <TouchableOpacity style={styles.payButton} onPress={handleTransaction}>
-        <Text style={styles.payButtonText}>Pay Now</Text>
+      <TouchableOpacity
+        style={styles.payButton}
+        onPress={handleTransaction}
+        disabled={isPaying}
+      >
+        {isPaying ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.payButtonText}>Pay Now</Text>
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -136,7 +151,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: "#f8f9fa",
-    margin:20,
+    margin: 20,
   },
   title: {
     fontSize: 24,
@@ -155,6 +170,7 @@ const styles = StyleSheet.create({
   row: {
     justifyContent: "space-between",
     marginBottom: 20,
+    flexWrap: "wrap",
   },
   coinCard: {
     flex: 1,
@@ -173,6 +189,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.5,
     shadowRadius: 8,
+  },
+  coinIcon: {
+    width: 32,
+    height: 32,
   },
   coinText: {
     marginTop: 10,
