@@ -1,39 +1,55 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Button } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Button} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import LottieView from 'lottie-react-native';
+import SwitchSelector from "react-native-switch-selector";
+import { LinearGradient } from 'expo-linear-gradient';
 
 const SignPageScreen = () => {
+    const [role, setRole] = React.useState('');
     const navigation = useNavigation();
     const handleSignup = () => {
-        navigation.navigate("SIGNUP");
+        navigation.navigate("SIGNUP",{role});
       };
       const handleLogin = () => {
-        navigation.navigate("LOGIN");
+        navigation.navigate("LOGIN",{role});
       };
-      const handleusersignpage = () => {
-        navigation.navigate("USERSIGNUPPAGE");
+      const handleUserSignPage=()=>{
+        navigation.navigate("USERSIGNUP",{role});
       };
+      const roleoptions = [
+        { label: "Merchant", value: "0" },
+        { label: "User", value: "1" }
+      ];
+      console.log(role);
     return (
+        <LinearGradient
+        colors={['#0072ff', '#00c6ff', '#ffffff']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0.5 }}
+        style={styles.background}
+      >
         <View style={styles.container}>
             <Text style={styles.headerText}>
                 With Blockpay, Crypto is not just a Currency - it's a lifestyle
             </Text>
-            <Image
-                source={require('../../assets/images/rb_2148298985 1.png')}
+            <LottieView
+                source={require('../../assets/images/Animation - 1737092584813.json')}
+                    autoPlay loop = {true}
+                
                 style={styles.image}
             />
-            <View style={styles.toggleContainer}>
-                <TouchableOpacity style={[styles.toggleButton, styles.toggleButtonActive]}>
-                    <Text style={styles.toggleButtonText}>Merchant</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.toggleButton} onPress={handleusersignpage}>
-                    <Text style={styles.toggleButtonText}>User</Text>
-                </TouchableOpacity>
-            </View>
+            <SwitchSelector
+            options={roleoptions}
+            initial={0}
+            style={styles.toggleContainer}
+            buttonColor= {'#007AFF'}
+            onPress={value=>setRole(value)}
+            />
             <TouchableOpacity 
-                style={styles.signUpButton} onPress={handleSignup}>
+                style={styles.signUpButton} onPress={()=>role==0? handleSignup('SIGNUP'):handleUserSignPage('USERSIGNUP')}>
                 <Text style={styles.signUpButtonText}>Sign up →</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> 
             <TouchableOpacity 
                 style={styles.loginButton}
                 onPress={handleLogin}
@@ -41,6 +57,7 @@ const SignPageScreen = () => {
                 <Text style={styles.loginbuttonText}>Login →</Text>
             </TouchableOpacity>
         </View>
+    </LinearGradient>
     );
 };
 
@@ -49,8 +66,10 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#fff',
         padding: 20,
+    },
+    background:{
+        flex:1,
     },
     headerText: {
         fontSize: 20,
@@ -71,23 +90,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#f0f0f0',
         padding: 5,
         marginBottom: 30,
-    },
-    toggleButton: {
-        flex: 1,
-        paddingVertical: 10,
-        borderRadius: 25,
-        alignItems: 'center',
-    },
-    toggleButtonActive: {
-        backgroundColor: '#007AFF',
-    },
-    toggleButtonText: {
-        color: '#000',
-        fontSize: 16,
-    },
-    toggleButtonTextActive: {
-        color: '#fff',
-        fontSize: 16,
     },
     signUpButton: {
         backgroundColor: '#007AFF',

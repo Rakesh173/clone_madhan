@@ -2,7 +2,9 @@ import React,{useEffect,useState} from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import QRCode from 'react-native-qrcode-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Linking } from 'react-native';
 
 const ProfilePage = () => {
   const navigation=useNavigation();
@@ -31,6 +33,23 @@ const ProfilePage = () => {
     getData();
   },[]);
 
+  // Genrating UPI ID
+  if (!merchantData.email) {
+    console.error("Email is undefined");
+    return;
+  }
+
+  const mail=merchantData.email
+  const upiID=mail.split('@')[0]+'@bp'+Math.floor(Math.random() * 1000);
+
+  // on scanning QR code
+
+  // const handleQRCodeScanned = ({type,data} ) =>
+  // {
+  //   setScanned(true);
+  //   setShouldAnimateExitingForTag(data);
+  //   console.log('Type' + type + '\nData:' + data)
+  // }
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.topcontainer}>
@@ -41,7 +60,7 @@ const ProfilePage = () => {
       </View>
       <View style={styles.profileContainer}>
         <Image
-          source={{ uri: 'https://via.placeholder.com/150' }} // Replace with actual image URL
+          source={require('../../assets/images/bplogo.png')} // Replace with actual image URL
           style={styles.profileImage}
         />
         <View style={styles.profileDetails}>
@@ -50,15 +69,22 @@ const ProfilePage = () => {
         </View>
       </View>
       <View style={styles.infoContainer}>
+        <Text style={styles.label}>Business Name</Text>
         <Text style={styles.label}>{merchantData.businessName}</Text>
-        <Text style={styles.infoText}></Text>
       </View>
       <View style={styles.infoContainer}>
+        <Text style={styles.label}>Wallet Address</Text>
         <Text style={styles.label}>{merchantData.walletAddress}</Text>
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.label}>UPI ID</Text>
-        <Text style={styles.infoText}>{merchantData.idnumber}</Text>
+        <Text style={styles.infoText}>{upiID}</Text>
+      </View>
+      <View style={styles.infoContainer}>
+        <QRCode
+          value={merchantData.walletAddress}
+          size={220}
+        />
       </View>
         <TouchableOpacity style={styles.payButton} onPress={handleTransfer}>
         <Text style={styles.payButtonText}>Pay Now</Text>

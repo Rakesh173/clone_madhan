@@ -1,6 +1,7 @@
 import React, { useEffect,useFocusEffect } from 'react';
 import { View, Text, TextInput, Image, ScrollView, TouchableOpacity, StyleSheet, Linking, BackHandler,alert,addEventListener } from 'react-native';
 import { useNavigation} from '@react-navigation/native';
+import LottieView from 'lottie-react-native';
 
 const App = () => {
   const navigation = useNavigation();
@@ -8,33 +9,33 @@ const App = () => {
       navigation.navigate("TRANSACTION");
   };
 
-  const handleBackPress = () => {
-    alert('Exit App', 'Are you sure you want to exit?', [
-      {
-        text: 'Cancel',
-        onPress: () => null,
-        style: 'cancel',
-      },
-      {
-        text: 'Exit',
-        onPress: () => BackHandler.exitApp(),
-      },
-    ]);
-    return true;
-  };
+  // const handleBackPress = () => {
+  //   alert('Exit App', 'Are you sure you want to exit?', [
+  //     {
+  //       text: 'Cancel',
+  //       onPress: () => null,
+  //       style: 'cancel',
+  //     },
+  //     {
+  //       text: 'Exit',
+  //       onPress: () => BackHandler.exitApp(),
+  //     },
+  //   ]);
+  //   return true;
+  // };
 
-  useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress',handleBackPress);
-  }, []);
+  // useEffect(() => {
+  //   BackHandler.addEventListener('hardwareBackPress',handleBackPress);
+  // }, []);
 
   const handleProfile=()=>{
-    navigation.navigate("HOMEPROFILE");
+    navigation.navigate("PROFILE");
   };
   const handleQr=()=>{
     navigation.navigate("CAMERAQR");
   };
   const handleBalance=()=>{
-    navigation.navigate("BALANCE");
+    navigation.navigate("TRANSFER");
   };
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -53,12 +54,14 @@ const App = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Illustration */}
         <View style={styles.illustrationContainer}>
-          <Image
-            source={require('../../assets/images/homepic 1.png')}
-            style={styles.illustration}
-          />
+            <LottieView
+              source={require('../../assets/images/Y5Bt5ISWHP.json')}
+              autoPlay
+              loop={true}
+              style={styles.illustration}
+            />
+            <Text style={styles.illustrationText}>BLOCKPAY</Text>
         </View>
       </View>
       <View style={styles.iconContainer}>
@@ -164,13 +167,21 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   illustrationContainer: {
-    alignItems: 'center',
-    marginTop: 20,
+    flexDirection:'row',
+    alignItems:'center',
+    
   },
   illustration: {
-    width: '100%',
-    height: 180,
-    resizeMode: 'contain',
+    width: 300,
+    height: 300,
+    right:50,
+  },
+  illustrationText:{
+    fontSize:50,
+    fontWeight:'bold',
+    fontWeight:400,
+    color:'#fff',
+    right:150,
   },
   quickActionsContainer: {
     flexDirection: 'row',

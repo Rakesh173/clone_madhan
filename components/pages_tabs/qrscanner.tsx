@@ -1,6 +1,6 @@
 import { CameraView } from "expo-camera";
 import { Stack } from "expo-router";
-import { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import {
   Linking,
   Platform,
@@ -13,11 +13,30 @@ import {
   Dimensions,
   Animated,
 } from "react-native";
+import { useNavigation } from '@react-navigation/native';
+import type { CompositeNavigationProp } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { ParamListBase } from '@react-navigation/routers';
 
-export default function QRCamera() {
+type TransferScreenParams = {
+  qrData: string;
+}
+
+type RootStackParamList = {
+  TRANSFER: TransferScreenParams;
+};
+
+type NavigationProps = CompositeNavigationProp<
+  NativeStackNavigationProp<RootStackParamList, 'TRANSFER'>,
+  NativeStackNavigationProp<ParamListBase>
+>;
+
+const QRCamera=()=> {
   const qrLock = useRef(false);
   const appstate = useRef(AppState.currentState);
   const lineAnimation = useRef(new Animated.Value(0)).current;
+  const navigation = useNavigation<NavigationProps>();
+  const [scannedData, setScannedData] = useState<string | null>(null);
 
   useEffect(() => {
     const subscription = AppState.addEventListener("change", (nextState) => {
@@ -47,6 +66,27 @@ export default function QRCamera() {
     ).start();
   }, [lineAnimation]);
 
+  const handleBarcodeScanned = ({ data }: { data: string }) => {
+    if (data.startsWith("0x")) {
+      if (!qrLock.current) {
+        qrLock.current = true;
+        setScannedData(data);
+        setTimeout(() => {
+          qrLock.current = false;
+          navigation.navigate("TRANSFER", { qrData: data });
+        }, 500);
+      }
+    } else {
+      if (!qrLock.current) {
+        qrLock.current = true;
+        alert("Invalid QR Code");
+        setTimeout(() => {
+          qrLock.current = false;
+        }, 10000);
+      }
+    }
+  };
+
   return (
     <SafeAreaView style={styles.abs}>
       <Stack.Screen options={{ title: "QR Scanner", headerShown: false }} />
@@ -55,15 +95,7 @@ export default function QRCamera() {
       <CameraView
         style={styles.abs}
         facing="back"
-        onBarcodeScanned={({ data }) => {
-          if (!qrLock.current) {
-            qrLock.current = true;
-            setTimeout(async () => {
-              await Linking.openURL(data);
-              qrLock.current = false;
-            }, 500);
-          }
-        }}
+        onBarcodeScanned={handleBarcodeScanned}
       >
         {/* Overlay */}
         <View style={styles.overlay}>
@@ -129,3 +161,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
+
+export default QRCamera;

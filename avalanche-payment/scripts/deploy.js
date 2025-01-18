@@ -1,16 +1,15 @@
 const hre = require("hardhat");
 
 async function main() {
-    const AvalanchePay = await hre.ethers.getContractFactory("AvalanchePay");
-    const avalanchePay = await AvalanchePay.deploy();
+    const TransactionManager = await hre.ethers.getContractFactory("TransactionManager");
+    const transactionManager = await TransactionManager.deploy();
+    await transactionManager.deployed();
 
-    await avalanchePay.deployed();
-    console.log("AvalanchePay deployed to:", avalanchePay.address);
+    console.log("TransactionManager deployed to:", transactionManager.address);
 }
 
-main()
-    .then(() => process.exit(0))
-    .catch((error) => {
-        console.error(error);
-        process.exit(1);
-    });
+main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+});
+

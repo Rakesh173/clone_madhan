@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView,ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
 
-const Signup = () => {
+const Signup = ({route}) => {
+  const {role}=route.params;
   const navigation = useNavigation();
   const [businessName, setBusinessName] = useState('');
   const [email, setEmail] = useState('');
@@ -12,13 +14,19 @@ const Signup = () => {
   const [errors, setErrors] = useState({});
 
   const handleIdentity = () => {
-    navigation.navigate("IDENTITY", { businessName, email, mobileNumber, password});
+    navigation.navigate("IDENTITY", { businessName, email, mobileNumber, password,role});
   };
   const handleLogin=()=>{
-    navigation.navigate("LOGIN");
+    navigation.navigate("LOGIN",{role});
   }
 
   return (
+    <LinearGradient
+        colors={['#0072ff', '#00c6ff', '#ffffff']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0.5 }}
+        style={styles.background}
+      >
     <View style={styles.scrollContainer}>
     <View style={styles.container}>
       <Text style={styles.header}>BlockPay in 3 Steps</Text>
@@ -97,40 +105,46 @@ const Signup = () => {
       </TouchableOpacity>
     </View>
     </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+  },
   scrollContainer: {
     flexGrow: 1,
-    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 20,
   },
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    backgroundColor: '#fff',
-    borderRadius: 10,
+    width: '90%',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    borderRadius: 20,
+    padding: 20,
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
-    marginTop:20,
+    color: '#333',
   },
   stepsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 20,
   },
   step: {
     alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+    padding: 10,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 30,
+    width: '28%',
     backgroundColor: '#f0f0f0',
   },
   activeStep: {
@@ -138,88 +152,87 @@ const styles = StyleSheet.create({
     borderColor: '#007AFF',
   },
   activeNumber: {
+    fontSize: 18,
+    fontWeight: 'bold',
     color: '#fff',
   },
   activeText: {
-    color:'#fff',
-  },
-  stepNumber: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#007AFF',
-  },
-  stepText: {
     fontSize: 12,
-    color: '#007AFF',
+    color: '#fff',
+    textAlign: 'center',
   },
   arrow: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#007AFF',
-    top: 15
   },
   subHeader: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
+    color: '#333',
+    marginBottom: 15,
   },
   input: {
+    width: '100%',
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 5,
+    borderRadius: 10,
     padding: 12,
     marginBottom: 15,
     backgroundColor: '#f9f9f9',
+    fontSize: 16,
   },
   passwordContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 5,
-    padding: 5,
-    marginBottom: 15,
+    borderRadius: 10,
+    padding:2,
     backgroundColor: '#f9f9f9',
-  },
-  showPassword: {
-    marginLeft: 10,
-    color: '#007AFF',
+    marginBottom: 15,
   },
   passwordInput: {
     flex: 1,
-    paddingVertical: 10,
+    fontSize: 16,
+    color: '#333',
+  },
+  showPassword: {
+    color: '#007AFF',
+    fontWeight: 'bold',
   },
   nextButton: {
     backgroundColor: '#007AFF',
-    borderRadius: 5,
-    padding: 15,
+    borderRadius: 25,
+    paddingVertical: 15,
     alignItems: 'center',
     marginTop: 20,
+    elevation: 5,
   },
   nextButtonText: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
   },
   errorText: {
     color: 'red',
+    fontSize: 14,
     marginBottom: 10,
   },
   footerContainer: {
-    textAlign:'center',
     flexDirection: 'row',
-    justifyContent:'center',
-    marginTop: 20,
-    marginLeft:10,
+    justifyContent: 'center',
+    marginVertical: 10,
   },
   footerText: {
-    color: '#555',
     fontSize: 14,
-    paddingLeft:10,
+    color: '#333',
   },
   signupText: {
+    fontSize: 14,
+    fontWeight: 'bold',
     color: '#007AFF',
-    fontSize: 16,
-    fontWeight: 800,
+    marginLeft: 5,
   },
 });
 

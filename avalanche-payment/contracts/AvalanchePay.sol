@@ -1,30 +1,27 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract AvalanchePay {
-    address public owner;
-    mapping(address => uint256) public merchantBalances;
+contract TransactionManager {
+    event TransactionSent(address indexed from, address indexed to, uint256 value, uint256 gasUsed);
 
-    event PaymentMade(address indexed merchant, address indexed payer, uint256 amount);
-
-    constructor() {
-        owner = msg.sender;
+    // Function to check the balance of any address
+    function getBalance(address addr) public view returns (uint256) {
+        return addr.balance;
     }
 
-    function payMerchant(address merchant) public payable {
-        require(msg.value > 0, "Payment amount must be greater than zero");
-        merchantBalances[merchant] += msg.value;
-        emit PaymentMade(merchant, msg.sender, msg.value);
+    // Function to send Ether from the contract
+    function sendFunds(address payable recipient) public payable {
+        require(msg.value > 0, "Transaction value must be greater than zero");
+        require(address(this).balance >= msg.value, "Insufficient contract balance");
+
+        uint256 gasBefore = gasleft();
+        (bool success, ) = recipient.call{value: msg.value}("");
+        require(success, "Transaction failed");
+        
+        uint256 gasUsed = gasBefore - gasleft();
+        emit TransactionSent(msg.sender, recipient, msg.value, gasUsed);
     }
 
-    function withdrawFunds() public {
-        uint256 balance = merchantBalances[msg.sender];
-        require(balance > 0, "No funds to withdraw");
-        merchantBalances[msg.sender] = 0;
-        payable(msg.sender).transfer(balance);
-    }
-
-    function getBalance(address merchant) public view returns (uint256) {
-        return merchantBalances[merchant];
-    }
+    // Allow contract to receive Ether
+    receive() external payable {}
 }

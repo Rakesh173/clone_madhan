@@ -3,13 +3,15 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Linking,ScrollView,Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
+import { LinearGradient } from 'expo-linear-gradient';
+//import LottieView from 'lottie-react-native';
 
 const CryptoSetup = ({route}) => {
-  const {businessName,email,mobileNumber,password,govtid,idnumber}=route.params;
+  const {businessName,email,mobileNumber,password,role,govtid,idnumber}=route.params;
 
   const navigation = useNavigation();
   const handleLogin = () => {
-      navigation.navigate("LOGIN");
+      navigation.navigate("LOGIN",{role});
   };
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
@@ -22,7 +24,7 @@ const CryptoSetup = ({route}) => {
     {label:'BEAM', value:'BEAM'}
   ]);
 
-  function handleSubmit(){
+  function handleMerchantSubmit(){
     const merchantData={
       businessName,
       email,
@@ -32,8 +34,7 @@ const CryptoSetup = ({route}) => {
       idnumber,
       walletAddress,
     }
-
-    axios.post("http://192.168.30.1:5001/merchantregister",merchantData)
+      axios.post("http://192.168.30.1:5001/merchantregister",merchantData)
     .then((res)=>{
       console.log(res.data);
       if(res.data.status== 'Ok'){
@@ -47,7 +48,37 @@ const CryptoSetup = ({route}) => {
     })
   }
 
+  function handleUserSubmit(){
+    const merchantData={
+      businessName,
+      email,
+      mobileNumber,
+      password,
+      govtid,
+      idnumber,
+      walletAddress,
+    }
+      axios.post("http://192.168.30.1:5001/userregister",merchantData)
+    .then((res)=>{
+      console.log(res.data);
+      if(res.data.status== 'Ok'){
+        alert('User Registered Successfully');
+        handleLogin();
+      }else{
+        alert(JSON.stringify(res.data));
+      }
+    }).catch((e)=>{
+      console.log(e);
+    })
+  }
+
   return (
+    <LinearGradient
+        colors={['#0072ff', '#00c6ff', '#ffffff']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0.5 }}
+        style={styles.background}
+      >
     <View style={styles.scrollContainer}>
     <View style={styles.container}>
       <Text style={styles.header}>BlockPay in 3 Steps</Text>
@@ -106,148 +137,154 @@ const CryptoSetup = ({route}) => {
       <TouchableOpacity>
         <Text style={styles.link}>Want to Pick Top Coins ? <Text onPress={() => Linking.openURL('https://coinmarketcap.com/trending-cryptocurrencies/')} style={styles.headlink}>Know More →</Text></Text>
       </TouchableOpacity>
+      {/* <View>
+        <LottieView 
+        source={require ('../../assets/images/Animation - 1736915214227.json')} 
+        autoPlay loop ={true}
+        style = {styles.illustration} 
+        />
+      </View> */}
       <TouchableOpacity style={styles.finishButton} onPress={() => {
             if (!walletAddress || !value
             ) {
               alert('Please fill in all required fields.');
             } else {
-              handleSubmit();
+              if(role==0){
+                handleMerchantSubmit();
+              }
+              handleUserSubmit();
             }
           }}>
         <Text style={styles.finishButtonText}>Register Now</Text>
       </TouchableOpacity>
     </View>
     </View>
+  </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
+  illustration: {
+    width: '100%',
+    height: 200,
+  },
+  background: {
+    flex: 1,
+  },
   scrollContainer: {
     flexGrow: 1,
-    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 20,
   },
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    backgroundColor: '#fff',
-    borderRadius: 10,
+    width: '90%',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    borderRadius: 20,
+    padding: 20,
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
+    color: '#333',
   },
   stepsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 20,
   },
   step: {
     alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+    padding: 10,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 30,
+    width: '28%',
     backgroundColor: '#f0f0f0',
-  },
-  stepNumber: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-    backgroundColor: '#6C63FF',
-    borderRadius: 50,
-    padding: 10,
-    width:50,
-    textAlign: 'center',
-    marginBottom: 5,
-  },
-  stepNumber: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#007AFF',
-  },
-  stepText: {
-    fontSize: 12,
-    color: '#007AFF',
   },
   activeStep: {
     backgroundColor: '#007AFF',
     borderColor: '#007AFF',
   },
+  stepNumber: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#007AFF',
+  },
   activeNumber: {
+    fontSize: 18,
+    fontWeight: 'bold',
     color: '#fff',
   },
+  stepText: {
+    fontSize: 12,
+    color: '#007AFF',
+    textAlign: 'center',
+  },
   activeText: {
-    color:'#fff',
+    fontSize: 12,
+    color: '#fff',
+    textAlign: 'center',
   },
   arrow: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#007AFF',
-    top: 15
   },
   subHeader: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
+    color: '#333',
+    marginBottom: 15,
   },
   input: {
+    width: '100%',
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 5,
+    borderRadius: 10,
     padding: 12,
     marginBottom: 15,
     backgroundColor: '#f9f9f9',
+    fontSize: 16,
   },
-  button: {
-    backgroundColor: '#6C63FF',
-    borderRadius: 5,
-    padding: 15,
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  cryptoIconsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 20,
-  },
-  cryptoIcon: {
-    width: 40,
-    height: 40,
-  },
-  link: {
-    color: '#007AFF',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  finishButton: {
+  nextButton: {
     backgroundColor: '#007AFF',
-    borderRadius: 10,
+    borderRadius: 25,
     paddingVertical: 15,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    marginTop: 20,
     elevation: 5,
   },
-  finishButtonText: {
+  nextButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
-    
   },
-  headlink:{
-    color:'007AFF',
-    fontWeight:700,
-  }
+  finishButton:{
+    alignItems:'center',
+      backgroundColor: '#007AFF',
+      borderRadius: 25,
+      paddingVertical: 12,
+      paddingHorizontal: 30,
+      elevation: 5,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+  },
+  finishButtonText:{
+    alignItems:'center',
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600'
+  },
 });
 
 export default CryptoSetup;
+

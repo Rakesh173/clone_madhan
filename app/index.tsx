@@ -1,5 +1,4 @@
 import SignPageScreen from '@/components/pages_tabs/sign_page';
-import UserSignPage from '@/components/pages_tabs/usersign_page';
 import Signup from '@/components/pages_tabs/signup';
 import Login from '@/components/pages_tabs/login';
 import BlockPayStep2 from '@/components/pages_tabs/identity';
@@ -12,8 +11,7 @@ import TransferScreen from '@/components/pages_tabs/transfer';
 import TransactionScreen from '@/components/pages_tabs/confirmation';
 import CheckBalance from '@/components/pages_tabs/checkbalance';
 import QRCamera from '@/components/pages_tabs/qrscanner';
-import QRCodeGenerator from '@/components/pages_tabs/home_profile';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import TransactionFailedScreen from '@/components/pages_tabs/failed';
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React,{useState,useEffect} from 'react';
@@ -56,8 +54,7 @@ export default function TabOneScreen() {
         <Stack.Screen name={"CONFIRMATION"} component={TransactionScreen}/>
         <Stack.Screen name={"BALANCE"} component={CheckBalance}/>
         <Stack.Screen name={"CAMERAQR"} component={QRCamera}/>
-        <Stack.Screen name={"HOMEPROFILE"} component={QRCodeGenerator}/>
-        <Stack.Screen name={"USERSIGNUPPAGE"} component={UserSignPage}/>
+        <Stack.Screen name={"FAILEDSCREEN"} component={TransactionFailedScreen}/>
       </Stack.Navigator>
     </SafeAreaView>
   )
