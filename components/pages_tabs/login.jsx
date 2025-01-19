@@ -17,45 +17,45 @@ const Login = ({route}) => {
     navigation.navigate("ENTRY");
   };
 
-  // function handleMerchantSubmit(){
-  //   console.log(email,password);
-  //   const merchantData={
-  //     email:email,
-  //     password,
-  //   }
-  //   axios.post("http://192.168.30.1:5001/merchantlogin",merchantData)
-  //   .then((res)=>{
-  //     console.log(res.data);
-  //     if(res.data.status=='ok'){
-  //     alert("Login Successfully");
-  //     AsyncStorage.setItem('token', res.data.data);
-  //     AsyncStorage.setItem('isLoggedIn',JSON.stringify(true));
-  //     handleEntry();
-  //     }else{
-  //       alert("Incorrect Email or Password");
-  //     }
-  //   });
-  // }
+  function handleMerchantSubmit(){
+    console.log(email,password);
+    const merchantData={
+      email:email,
+      password,
+    }
+    axios.post("https://blockpay1-new.onrender.com/merchantlogin",merchantData)
+    .then((res)=>{
+      console.log(res.data);
+      if(res.data.status=='ok'){
+      alert("Login Successfully");
+      AsyncStorage.setItem('token', res.data.data);
+      AsyncStorage.setItem('isLoggedIn',JSON.stringify(true));
+      handleEntry();
+      }else{
+        alert("Incorrect Email or Password");
+      }
+    });
+  }
 
-  // function handleUserSubmit(){
-  //   console.log(email,password);
-  //   const userData={
-  //     email:email,
-  //     password,
-  //   }
-  //   axios.post("http://192.168.30.1:5001/userlogin",userData)
-  // .then((res)=>{
-  //     console.log(res.data);
-  //     if(res.data.status=='ok'){
-  //     alert("Login Successfully");
-  //     AsyncStorage.setItem('token', res.data.data);
-  //     AsyncStorage.setItem('isLoggedIn',JSON.stringify(true));
-  //     handleEntry();
-  //     }else{
-  //       alert("Incorrect Email or Password");
-  //     }
-  //   });
-  // }
+  function handleUserSubmit(){
+    console.log(email,password);
+    const userData={
+      email:email,
+      password,
+    }
+    axios.post("https://blockpay1-new.onrender.com/userlogin",userData)
+  .then((res)=>{
+      console.log(res.data);
+      if(res.data.status=='ok'){
+      alert("Login Successfully");
+      AsyncStorage.setItem('token', res.data.data);
+      AsyncStorage.setItem('isLoggedIn',JSON.stringify(true));
+      handleEntry();
+      }else{
+        alert("Incorrect Email or Password");
+      }
+    });
+  }
 
  
  const handleSignup=()=>{

@@ -18,10 +18,7 @@ const CryptoSetup = ({route}) => {
   const [walletAddress,setWalletAddress]=useState('');
   const [items, setItems] = useState([
     {label: 'Avax', value: 'Avax'},
-    {label: 'USDT', value: 'USDT'},
-    {label: 'LINK', value: 'LINK'},
-    {label:'USDC', value:'USDC'},
-    {label:'BEAM', value:'BEAM'}
+    {label: 'LINK', value: 'link'},
   ]);
 
   function handleMerchantSubmit(){
@@ -34,7 +31,7 @@ const CryptoSetup = ({route}) => {
       idnumber,
       walletAddress,
     }
-      axios.post("http://192.168.30.1:5001/merchantregister",merchantData)
+      axios.post("https://blockpay1-new.onrender.com/merchantregister",merchantData)
     .then((res)=>{
       console.log(res.data);
       if(res.data.status== 'Ok'){
@@ -58,7 +55,7 @@ const CryptoSetup = ({route}) => {
       idnumber,
       walletAddress,
     }
-      axios.post("http://192.168.30.1:5001/userregister",merchantData)
+      axios.post("https://blockpay1-new.onrender.com/userregister",merchantData)
     .then((res)=>{
       console.log(res.data);
       if(res.data.status== 'Ok'){
@@ -287,3 +284,4 @@ const styles = StyleSheet.create({
 });
 
 export default CryptoSetup;
+

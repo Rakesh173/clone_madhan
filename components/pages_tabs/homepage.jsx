@@ -35,7 +35,7 @@ const App = () => {
     navigation.navigate("CAMERAQR");
   };
   const handleBalance=()=>{
-    navigation.navigate("TRANSFER");
+    navigation.navigate("BALANCE");
   };
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>

@@ -14,7 +14,7 @@ if (!global.crypto) {
 // Function to connect to the wallet
 export const connectWallet = async (privateKey) => {
   try {
-    const provider = new Web3.providers.HttpProvider("https://api.avax.network/ext/bc/C/rpc"); // Mainnet RPC URL
+    const provider = new Web3.providers.HttpProvider("https://api.avax-test.network/ext/bc/C/rpc"); // Testnet RPC URL
     const web3 = new Web3(provider);
 
     const senderAccount = web3.eth.accounts.privateKeyToAccount(privateKey);
@@ -46,32 +46,48 @@ export const getBalance = async (web3, senderAddress) => {
 // Function to transfer funds
 export const transferFunds = async (web3, privateKey, toAddress, amountInAVAX) => {
   try {
-    if (!web3) throw new Error('Web3 instance not initialized');
+    if (!web3) {
+      throw new Error('Web3 instance not initialized');
+    }
 
     const contract = new web3.eth.Contract(CONTRACT_ABI, contract_address);
+
+    // Convert AVAX amount to Wei
     const amountInWei = web3.utils.toWei(amountInAVAX.toString(), 'ether');
-    const senderAccount = web3.eth.accounts.privateKeyToAccount(privateKey);
 
-    const txData = contract.methods.transferFunds(toAddress, amountInWei).encodeABI();
+    // Get the sender address from the private key
+    const senderAddress = web3.eth.accounts.privateKeyToAccount(privateKey).address;
+
+    // Create the transaction data
+    const txData = contract.methods
+      .transferFunds(toAddress, amountInWei) // Call the transferFunds method
+      .encodeABI();
+
+    // Get the current gas price and nonce
     const gasPrice = await web3.eth.getGasPrice();
-    const nonce = await web3.eth.getTransactionCount(senderAccount.address, 'latest'); // Use latest nonce
+    const nonce = await web3.eth.getTransactionCount(senderAddress);
 
+    // Build the transaction object
     const txObject = {
-      to: contract_address,
-      value: '0', // No direct AVAX transfer; handled by the contract
-      gas: await contract.methods.transferFunds(toAddress, amountInWei).estimateGas({ from: senderAccount.address }),
+      from: senderAddress,
+      to: toAddress,
+      value: amountInWei, // Specify the value in the transaction (amount of AVAX to send)
+      gas: 200000, // Estimate the gas limit or set manually
       gasPrice,
       nonce,
       data: txData,
     };
 
+    // Sign the transaction
     const signedTx = await web3.eth.accounts.signTransaction(txObject, privateKey);
+
+    // Send the signed transaction
     const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
 
     console.log('Transaction successful:', receipt);
     return receipt;
   } catch (error) {
-    console.error('Transaction failed:', error.message);
-    throw error;
+    console.error('Transaction failed:', error);
   }
 };
+

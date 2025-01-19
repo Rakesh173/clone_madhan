@@ -18,6 +18,6 @@ export const CONTRACT_ABI = [
     "stateMutability": "view",
     "type": "function"
   }
-];
+]
 
 export const contract_address = CONTRACT_ADDRESS;
