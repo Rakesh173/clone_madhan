@@ -12,10 +12,7 @@ import {
 } from "react-native";
 import axios from "axios";
 import { useNavigation,useRoute } from "@react-navigation/native";
-import Web3 from 'web3';
-const provider = new Web3.providers.HttpProvider("https://sepolia.infura.io/v3/325bd28639c9484381b3b0dba697aebb");
-const web3 = new Web3(provider);
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { connectWallet, transferFunds } from './wallectconnect';
 
 const TransferScreen = () => {
   // const {qrData}=route.params;
@@ -36,6 +33,37 @@ const TransferScreen = () => {
     }, 1000); // Simulate API call or processing time
   };
 
+  const privateKey="0x1dd166a1b0b8be3f0ba102800decf10bd7b22a9d6e9cd2c4c94ee2f5687e83d8";
+  const toAddress="0x4611153A4db6F32B4958d85f73d5cd2D6974Eb98";
+  const amount='0.0001';
+
+// Function to execute the transaction
+const executeTransaction = async () => {
+  try {
+    if (!toAddress || !amount) {
+      alert('Please provide both address and amount');
+      return;
+    }
+
+    // Connect to wallet and get the web3 instance
+    const { web3, senderAddress } = await connectWallet(privateKey);
+
+    if (!web3 || !senderAddress) {
+      alert('Wallet connection failed.');
+      return;
+    }
+
+    // Perform the fund transfer
+    await transferFunds(web3,privateKey, toAddress, amount);
+  } catch (error) {
+    console.error('Error executing transaction:', error);
+  }
+};
+
+// Call the function to execute the transaction
+executeTransaction();
+
+
   // const [userData,setUserData]=useState('');
 
   // //Getting Merchant Data
@@ -55,31 +83,31 @@ const TransferScreen = () => {
   // },[]);
 
   // Fetch live crypto prices
-  useEffect(() => {
-    const fetchPrices = async () => {
-      try {
-        const response = await axios.get(
-          "https://api.coingecko.com/api/v3/simple/price?ids=avalanche,tether,usdcoin,chainlink&vs_currencies=inr"
-        );
-        setCryptoPrices(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching crypto prices: ", error);
-        Alert.alert("Error", "Unable to fetch crypto prices. Please try again.");
-      }
-    };
-    fetchPrices();
-  }, []);
+  // useEffect(() => {
+  //   const fetchPrices = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         "https://api.coingecko.com/api/v3/simple/price?ids=avalanche,tether,usdcoin,chainlink&vs_currencies=inr"
+  //       );
+  //       setCryptoPrices(response.data);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.error("Error fetching crypto prices: ", error);
+  //       Alert.alert("Error", "Unable to fetch crypto prices. Please try again.");
+  //     }
+  //   };
+  //   fetchPrices();
+  // }, []);
 
-  // Recalculate crypto amount
-  useEffect(() => {
-    if (inrAmount && selectedCoin && cryptoPrices[selectedCoin]) {
-      const conversionRate = cryptoPrices[selectedCoin].inr;
-      setCryptoAmount((parseFloat(inrAmount) / conversionRate).toFixed(8));
-    } else {
-      setCryptoAmount(0);
-    }
-  }, [inrAmount, selectedCoin, cryptoPrices]);
+  // // Recalculate crypto amount
+  // useEffect(() => {
+  //   if (inrAmount && selectedCoin && cryptoPrices[selectedCoin]) {
+  //     const conversionRate = cryptoPrices[selectedCoin].inr;
+  //     setCryptoAmount((parseFloat(inrAmount) / conversionRate).toFixed(8));
+  //   } else {
+  //     setCryptoAmount(0);
+  //   }
+  // }, [inrAmount, selectedCoin, cryptoPrices]);
 
   // Getting Merchant Data 
 

@@ -6,10 +6,8 @@ const jwt=require('jsonwebtoken');
 const app=express();
 app.use(express.json());
 app.use(cors());
-const port =5001;
 require('dotenv').config();
 const { Web3 } = require('web3');
-
 
 
 const mongoUrl="mongodb+srv://Madhan94:Blockpay1@blockpay-register.4zidy.mongodb.net/?retryWrites=true&w=majority&appName=Blockpay-register";
@@ -272,98 +270,9 @@ app.post('/transfer', async (req, res) => {
 
 // Starting the Server
 
-app.listen(port,()=>{
-    console.log("Server is connected to the Port No "+port)
+app.listen(process.env.X_ZOHO_CATALYST_LISTEN_PORT || 5001,()=>{
+    console.log("Server is connected to the Port No "+process.env.X_ZOHO_CATALYST_LISTEN_PORT)
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const express = require('express');
-// const mongoose = require('mongoose');
-// const bcrypt=require('bcrypt');
-// const bodyParser = require('body-parser');
-// const app = express();
-
-// const port = 3001;
-
-// app.set('view engiene','ejs');
-
-// // Start the server
-// app.listen(port, () => {
-//     console.log("Server is running on port " + port);
-// });
-
-// app.use(bodyParser.json());
-
-// mongoose.connect('mongodb+srv://Madhan84:Madhanpay@blockpay.eymag.mongodb.net/Blockpay-Users').then(() => {
-//     console.log('MongoDB connected successfully.');
-// }).catch((err) => {
-//     console.error('MongoDB connection error:', err.message);
-// });
-
-// // Define the merchant schema
-// const merchantSchema = new mongoose.Schema({
-//     businessName: { type: String, required: true },
-//     email: { type: String, required: true, unique: true },
-//     phoneNumber: { type: String, required: true },
-//     password: { type: String, required: true }, // Hash this in production
-//     fullName: { type: String, required: true },
-//     govtId: { type: String, required: true },
-//     walletAddress: { type: String, required: true },
-//     preferredCryptoCoins: { type: [String], required: true },
-// }, { timestamps: true });
-
-// // Create the model
-// const Merchant = mongoose.model('Merchant', merchantSchema);
-
-// // Define the route for adding a merchant
-// app.post('/add-merchant', async (req, res) => {
-//     try {
-//         const {
-//             businessName,
-//             email,
-//             phoneNumber,
-//             password,
-//             fullName,
-//             govtId,
-//             walletAddress,
-//             preferredCryptoCoins,
-//         } = req.body;
-
-//         const newMerchant = new Merchant({
-//             businessName,
-//             email,
-//             phoneNumber,
-//             password,
-//             fullName,
-//             govtId,
-//             walletAddress,
-//             preferredCryptoCoins,
-//         });
-
-//         await newMerchant.save();
-//         res.status(201).json({ message: 'Merchant registered successfully!' });
-//     } catch (error) {
-//         res.status(500).json({ error: 'Failed to register merchant.', details: error.message });
-//     }
-// });
 
 
 

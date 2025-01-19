@@ -1,20 +1,12 @@
-require("@nomiclabs/hardhat-waffle");
-require("dotenv").config(); 
-
-const { PRIVATE_KEY, AVALANCHE_RPC_URL } = process.env;
+require("@nomiclabs/hardhat-ethers");
+require("dotenv").config(); // Load environment variables from .env file
 
 module.exports = {
-  solidity: "0.8.18",
-  networks: {
-    avalanche: {
-      url: AVALANCHE_RPC_URL || "https://api.avax.network/ext/bc/C/rpc", 
-      accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [], 
+    solidity: "0.8.0",
+    networks: {
+        fuji: {
+            url: "https://api.avax-test.network/ext/bc/C/rpc", // Fuji RPC URL
+            accounts: [process.env.PRIVATE_KEY], // Ensure PRIVATE_KEY is set in the .env file
+        },
     },
-  },
-  paths: {
-    sources: "./contracts", 
-    tests: "./test", 
-    cache: "./cache", 
-    artifacts: "./artifacts", 
-  },
 };

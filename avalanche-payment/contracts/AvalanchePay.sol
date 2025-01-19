@@ -1,27 +1,39 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract TransactionManager {
-    event TransactionSent(address indexed from, address indexed to, uint256 value, uint256 gasUsed);
-
-    // Function to check the balance of any address
-    function getBalance(address addr) public view returns (uint256) {
-        return addr.balance;
+contract BlockPay {
+    struct Transaction {
+        address from;
+        address to;
+        uint256 amount;
+        uint256 timestamp;
     }
 
-    // Function to send Ether from the contract
-    function sendFunds(address payable recipient) public payable {
-        require(msg.value > 0, "Transaction value must be greater than zero");
-        require(address(this).balance >= msg.value, "Insufficient contract balance");
+    Transaction[] public transactions;
 
-        uint256 gasBefore = gasleft();
-        (bool success, ) = recipient.call{value: msg.value}("");
-        require(success, "Transaction failed");
-        
-        uint256 gasUsed = gasBefore - gasleft();
-        emit TransactionSent(msg.sender, recipient, msg.value, gasUsed);
+    event PaymentProcessed(address indexed from, address indexed to, uint256 amount);
+
+    // Function to process payments
+    function pay(address payable _to) external payable {
+        require(msg.value > 0, "Payment amount must be greater than zero");
+
+        _to.transfer(msg.value);
+        transactions.push(Transaction(msg.sender, _to, msg.value, block.timestamp));
+
+        emit PaymentProcessed(msg.sender, _to, msg.value);
     }
 
-    // Allow contract to receive Ether
+    // Function to get all transactions
+    function getAllTransactions() external view returns (Transaction[] memory) {
+        return transactions;
+    }
+
+    // Function to get the balance of the contract
+    function getBalance() external view returns (uint256) {
+        return address(this).balance;
+    }
+
+    // Fallback function to accept AVAX
     receive() external payable {}
 }
+

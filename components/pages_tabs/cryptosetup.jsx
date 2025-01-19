@@ -4,7 +4,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Linking,Scr
 import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import { LinearGradient } from 'expo-linear-gradient';
-//import LottieView from 'lottie-react-native';
+import LottieView from 'lottie-react-native';
 
 const CryptoSetup = ({route}) => {
   const {businessName,email,mobileNumber,password,role,govtid,idnumber}=route.params;
@@ -137,13 +137,13 @@ const CryptoSetup = ({route}) => {
       <TouchableOpacity>
         <Text style={styles.link}>Want to Pick Top Coins ? <Text onPress={() => Linking.openURL('https://coinmarketcap.com/trending-cryptocurrencies/')} style={styles.headlink}>Know More →</Text></Text>
       </TouchableOpacity>
-      {/* <View>
+      <View>
         <LottieView 
         source={require ('../../assets/images/Animation - 1736915214227.json')} 
         autoPlay loop ={true}
         style = {styles.illustration} 
         />
-      </View> */}
+      </View>
       <TouchableOpacity style={styles.finishButton} onPress={() => {
             if (!walletAddress || !value
             ) {
@@ -287,4 +287,3 @@ const styles = StyleSheet.create({
 });
 
 export default CryptoSetup;
-

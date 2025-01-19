@@ -33,23 +33,15 @@ const ProfilePage = () => {
     getData();
   },[]);
 
-  // Genrating UPI ID
-  if (!merchantData.email) {
-    console.error("Email is undefined");
-    return;
-  }
-
-  const mail=merchantData.email
-  const upiID=mail.split('@')[0]+'@bp'+Math.floor(Math.random() * 1000);
-
-  // on scanning QR code
-
-  // const handleQRCodeScanned = ({type,data} ) =>
-  // {
-  //   setScanned(true);
-  //   setShouldAnimateExitingForTag(data);
-  //   console.log('Type' + type + '\nData:' + data)
+  // // Genrating UPI ID
+  // if (!merchantData.email) {
+  //   console.error("Email is undefined");
+  //   return;
   // }
+
+  // const mail=merchantData.email
+  // const upiID=mail.split('@')[0]+'@bp'+Math.floor(Math.random() * 1000);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.topcontainer}>
@@ -64,25 +56,25 @@ const ProfilePage = () => {
           style={styles.profileImage}
         />
         <View style={styles.profileDetails}>
-          <Text style={styles.profileName}>{merchantData.govtid}</Text>
+          {/* <Text style={styles.profileName}>{merchantData.govtid}</Text> */}
           <Text style={styles.verifiedText}>Verified Merchant</Text>
         </View>
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Business Name</Text>
-        <Text style={styles.label}>{merchantData.businessName}</Text>
+        {/* <Text style={styles.label}>{merchantData.businessName}</Text> */}
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Wallet Address</Text>
-        <Text style={styles.label}>{merchantData.walletAddress}</Text>
+        {/* <Text style={styles.label}>{merchantData.walletAddress}</Text> */}
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.label}>UPI ID</Text>
-        <Text style={styles.infoText}>{upiID}</Text>
+        {/* <Text style={styles.infoText}>{upiID}</Text> */}
       </View>
       <View style={styles.infoContainer}>
         <QRCode
-          value={merchantData.walletAddress}
+          // value={merchantData.walletAddress}
           size={220}
         />
       </View>
