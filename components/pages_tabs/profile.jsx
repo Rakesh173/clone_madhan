@@ -22,7 +22,7 @@ const ProfilePage = () => {
   async function getData(){
     const token=await AsyncStorage.getItem('token');
     console.log(token);
-    axios.post('http://192.168.30.1:5001/merchantdata',{token:token})
+    axios.post('https://clone-madhan.onrender.com/merchantdata',{token:token})
     .then((res)=>{
       console.log(res.data);
       setMerchantData(res.data.data);

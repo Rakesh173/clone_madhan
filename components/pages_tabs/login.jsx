@@ -23,7 +23,7 @@ const Login = ({route}) => {
       email:email,
       password,
     }
-    axios.post("https://blockpay1-new.onrender.com/merchantlogin",merchantData)
+    axios.post("https://clone-madhan.onrender.com/merchantlogin",merchantData)
     .then((res)=>{
       console.log(res.data);
       if(res.data.status=='ok'){
@@ -43,7 +43,7 @@ const Login = ({route}) => {
       email:email,
       password,
     }
-    axios.post("https://blockpay1-new.onrender.com/userlogin",userData)
+    axios.post("https://clone-madhan.onrender.com/userlogin",userData)
   .then((res)=>{
       console.log(res.data);
       if(res.data.status=='ok'){

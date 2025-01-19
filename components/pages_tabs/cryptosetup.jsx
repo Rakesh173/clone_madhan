@@ -31,7 +31,7 @@ const CryptoSetup = ({route}) => {
       idnumber,
       walletAddress,
     }
-      axios.post("https://blockpay1-new.onrender.com/merchantregister",merchantData)
+      axios.post("https://clone-madhan.onrender.com/merchantregister",merchantData)
     .then((res)=>{
       console.log(res.data);
       if(res.data.status== 'Ok'){
@@ -55,7 +55,7 @@ const CryptoSetup = ({route}) => {
       idnumber,
       walletAddress,
     }
-      axios.post("https://blockpay1-new.onrender.com/userregister",merchantData)
+      axios.post("https://clone-madhan.onrender.com/userregister",merchantData)
     .then((res)=>{
       console.log(res.data);
       if(res.data.status== 'Ok'){

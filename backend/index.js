@@ -5,7 +5,12 @@ const cors=require('cors');
 const jwt=require('jsonwebtoken');
 const app=express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: 'https://your-frontend-domain.com', // Update with your frontend domain
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+}));
+
 require('dotenv').config();
 const { Web3 } = require('web3');
 
@@ -270,8 +275,8 @@ app.post('/transfer', async (req, res) => {
 
 // Starting the Server
 
-app.listen(process.env.X_ZOHO_CATALYST_LISTEN_PORT || 5001,()=>{
-    console.log("Server is connected to the Port No "+process.env.X_ZOHO_CATALYST_LISTEN_PORT)
+app.listen(process.env.PORT || 5001,()=>{
+    console.log("Server is connected to the Port No "+process.env.PORT);
 });
 
 

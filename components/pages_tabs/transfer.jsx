@@ -81,7 +81,7 @@ const TransferScreen = ({ route }) => {
   async function getData() {
     const token = await AsyncStorage.getItem('token');
     console.log(token);
-    axios.post('http://192.168.30.1:5001/userdata', { token: token })
+    axios.post('https://clone-madhan.onrender.com/userdata', { token: token })
       .then((res) => {
         console.log(res.data);
         setUserData(res.data.data);
